@@ -73,3 +73,28 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
 
 -- 与系统剪切板共用
 vim.api.nvim_command('set clipboard+=unnamedplus')
+
+-- 自动切换输入法
+--[[ 
+逻辑是这样的：
+先让 fcitx 有两种输入法：搜狗（包括中文和英文）和英文
+正是因为我喜欢搜狗的快捷键，所以我只希望使用搜狗的中英文
+但是这个想法是办不到的，所以我必须设置一个英文输入法
+fcitx-remote -c 会关闭一个输入法 -o 会打开一个输入法 
+我只要在 normal 模式下选择普通英文即可，而其他时候使用搜狗的中英文
+]]
+-- 离开插入模式关闭搜狗输入
+vim.api.nvim_command('autocmd InsertLeave * :silent !fcitx-remote -o')
+-- 进入插入模式打开搜狗输入
+vim.api.nvim_command('autocmd InsertEnter * :silent !fcitx-remote -c')
+-- 进入 vim 关闭搜狗输入
+vim.api.nvim_command('autocmd VimEnter * :silent !fcitx-remote -o')
+vim.api.nvim_command('autocmd WinEnter * :silent !fcitx-remote -o')
+-- 离开 vim 打开搜狗输入
+vim.api.nvim_command('autocmd VimLeave * :silent !fcitx-remote -c')
+-- vim 失去焦点的时候，主要用于和其他窗口作用
+vim.api.nvim_command('autocmd FocusLost * :silent !fcitx-remote -c')
+-- vim 中 buffer 是打开的文件，这是位为了以防万一
+vim.api.nvim_command('autocmd BufCreate * :silent !fcitx-remote -o')
+vim.api.nvim_command('autocmd BufEnter * :silent !fcitx-remote -o')
+vim.api.nvim_command('autocmd BufLeave * :silent !fcitx-remote -o')

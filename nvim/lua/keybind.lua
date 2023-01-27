@@ -10,9 +10,6 @@ local opt = {noremap = true, silent = true }
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- 将 i 映射为 n
-map("n", "i", "a", opt)
-
 -- 选中全部文本
 map("n", "<C-a>", "ggVG", opt)
 
